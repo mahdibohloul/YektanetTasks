@@ -46,9 +46,9 @@ class Advertiser(BaseAdvertising):
 
     @classmethod
     def help(cls):
-        help = 'This is Advertiser class, it has some peroperties: id, name, clicks, views.' \
-               'The Id fields is unique and the clicks is equal to numbers of clicks on this advertiser' \
-               'and the views is equal to number of times this advertiser have been seen'
+        help = 'This is Advertiser class, it has some properties: id, name, clicks, views.' \
+               'The Id fields is unique and the clicks are equal to numbers of clicks on this advertiser' \
+               'and the number of views is equal to the number of times this advertiser\'s ad have been seen'
         return help
 
     @classmethod
