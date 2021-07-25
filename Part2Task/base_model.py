@@ -6,7 +6,7 @@ class BaseAdvertising(ABC):
         self.__id = id
         self.__views = 0
         self.__clicks = 0
-    
+
     @abstractmethod
     def describe_me(self):
         pass

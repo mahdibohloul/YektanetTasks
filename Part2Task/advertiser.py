@@ -7,19 +7,19 @@ class AdvertiserManager:
 
     @staticmethod
     def get_instance():
-        if AdvertiserManager.__instance == None:
+        if AdvertiserManager.__instance is None:
             AdvertiserManager()
         return AdvertiserManager.__instance
-    
+
     def __init__(self):
-        if AdvertiserManager.__instance != None:
+        if AdvertiserManager.__instance is not None:
             raise Exception("This class is a singleton!")
         else:
             AdvertiserManager.__instance = self
 
     def add_advertiser(self, ad):
         self.__advertisers.append(ad)
-    
+
     def check_id_for_unique(self, id):
         if all(x.get_id() != id for x in self.__advertisers):
             return id
@@ -29,6 +29,7 @@ class AdvertiserManager:
     def get_total_clicks(cls):
         return sum(adv.get_views() for adv in cls.__advertisers)
 
+
 class Advertiser(BaseAdvertising):
 
     def __init__(self, id: int, name: str):
@@ -36,7 +37,6 @@ class Advertiser(BaseAdvertising):
         super().__init__(self.__manager.check_id_for_unique(id))
         self.__name: str = name
         self.__manager.add_advertiser(self)
-
 
     def get_name(self):
         return self.__name
@@ -46,10 +46,10 @@ class Advertiser(BaseAdvertising):
 
     @classmethod
     def help(cls):
-        help = 'This is Advertiser class, it has some properties: id, name, clicks, views.' \
-               'The Id fields is unique and the clicks are equal to numbers of clicks on this advertiser' \
-               'and the number of views is equal to the number of times this advertiser\'s ad have been seen'
-        return help
+        help_txt = 'This is Advertiser class, it has some properties: id, name, clicks, views.' \
+                   'The Id fields is unique and the clicks are equal to numbers of clicks on this advertiser' \
+                   'and the number of views is equal to the number of times this advertiser\'s ad have been seen'
+        return help_txt
 
     @classmethod
     def get_total_clicks(cls):
