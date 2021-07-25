@@ -1,0 +1,13 @@
+{% extends 'advertiser_management/base.html' %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Advertiser Info</legend>
+            {{ form.as_p }}
+        </fieldset>
+        <div class="form-group">
+            <button type="submit" class="btn btn-outline-info">Save</button>
+        </div>
+    </form>
+{% endblock %}

@@ -1,6 +1,12 @@
 from django import forms
 
-from .models import Ad
+from .models import Ad, Advertiser
+
+
+class CreateAdvertiserForm(forms.ModelForm):
+    class Meta:
+        model = Advertiser
+        fields = ['name']
 
 
 class CreateAdForm(forms.ModelForm):
