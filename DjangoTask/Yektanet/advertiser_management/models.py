@@ -1,4 +1,5 @@
 from django.db import models
+from PIL import Image
 
 
 class Advertiser(models.Model):
@@ -20,7 +21,7 @@ class Advertiser(models.Model):
 
 class Ad(models.Model):
     title = models.CharField(max_length=50)
-    img_url = models.URLField()
+    image = models.ImageField(default='default.jpg', upload_to='ad_pics')
     link = models.URLField()
     views = models.PositiveIntegerField(default=0)
     clicks = models.PositiveIntegerField(default=0)
@@ -38,3 +39,12 @@ class Ad(models.Model):
         self.views += 1
         self.advertiser.inc_views()
         self.save()
+
+    def save(self, **kwargs):
+        super().save(**kwargs)
+
+        img = Image.open(self.image.path)
+        if img.height > 300 or img.width > 300:
+            output_size = (300, 300)
+            img.thumbnail(output_size)
+            img.save(self.image.path)
