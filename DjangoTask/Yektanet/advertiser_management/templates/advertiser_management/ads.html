@@ -9,7 +9,7 @@
                         {% for ad in advertiser.ads.all %}
                             <div class="card p-0 mx-2">
                                 <a href="{% url 'click-ad-view' ad.id %}">
-                                    <img src="{{ ad.img_url }}"
+                                    <img src="{{ ad.image.url }}"
                                          class="card-img-top">
                                     <div class="card-body">
                                         <span>{{ ad.title }}</span>
