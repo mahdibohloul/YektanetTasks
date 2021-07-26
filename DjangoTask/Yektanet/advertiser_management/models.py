@@ -1,7 +1,6 @@
-from django.db import models
 from PIL import Image
+from django.db import models
 from django.urls import reverse
-from django.db.models.functions import Trunc
 
 
 class Advertiser(models.Model):

@@ -1,5 +1,6 @@
-from django.db.models import Q, F, Count, Avg
-from django.db.models.functions import Trunc
+import itertools
+
+from django.db import models
 
 from .models import Ad, Advertiser, View, Click
 
@@ -36,16 +37,10 @@ def num_of_ad_clicks_apart_hour(ad: Ad):
     return __prepare_num_apart_hour(Click, ad)
 
 
-def __prepare_num_apart_hour(model, ad: Ad):
-    model_name = "advertiser_management_" + model.__name__.lower()
-    result = model.objects.raw(
-        f"SELECT 1 as id, COUNT(id) as \"count\", DATE_TRUNC('hour', {model_name}.\"created_on\" AT TIME ZONE 'UTC') AS \"created_date\" FROM {model_name} WHERE {model_name}.\"ad_id\" = {ad.id} GROUP BY DATE_TRUNC('hour', {model_name}.\"created_on\" AT TIME ZONE 'UTC') ORDER BY \"created_date\" DESC ")
-
+def __prepare_num_apart_hour(model: models, ad: Ad):
+    result = {}
+    objs = model.objects.filter(ad=ad).order_by('-created_on')
+    groups = itertools.groupby(objs, lambda x: x.created_on.replace(minute=0, second=0, microsecond=0))
+    for group, matches in groups:
+        result[group] = sum(1 for _ in matches)
     return result
-
-
-def __get_created_times(model, ad):
-    created_times = model.objects.filter(ad=ad).annotate(created_time=Trunc('created_on', 'hour')).distinct(
-        'created_time').values_list('created_time').order_by('created_time')
-    return created_times
-

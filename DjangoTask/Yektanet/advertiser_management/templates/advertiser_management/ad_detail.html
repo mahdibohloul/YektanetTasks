@@ -10,15 +10,15 @@
                 <p class="text-secondary">Views: {{ object.total_views }} | Clicks: {{ object.total_clicks }}</p>
                 <div>
                     <p class="text-secondary">Views report:</p>
-                    {% for view in views %}
-                        <li class="tabular">{{ view.created_date|date:"Y M D, H" }} viewed {{ view.count }} times</li>
+                    {% for key, value in views.items %}
+                        <li class="tabular">{{ key|date:"Y M D, H" }} viewed {{ value }} times</li>
                     {% endfor %}
                 </div>
                 <div>
                     &nbsp;
                     <p class="text-secondary">Clicks report:</p>
-                    {% for click in clicks %}
-                        <li class="tabular">{{ click.created_date|date:"Y M D, H" }} clicked {{ click.count }} times</li>
+                    {% for key, value in clicks.items %}
+                        <li class="tabular">{{ key|date:"Y M D, H" }} clicked {{ value }} times</li>
                     {% endfor %}
                 </div>
             </div>
