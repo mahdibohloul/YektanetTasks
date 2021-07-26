@@ -15,11 +15,11 @@ def get_advertiser_by_pk(pk):
         return None
 
 
-def update_advertisers_views(advertisers: list[Advertiser]):
+def update_advertisers_views(advertisers: list[Advertiser], ip_addr):
     for advertiser in advertisers:
-        update_advertiser_views(advertiser)
+        update_advertiser_views(advertiser, ip_addr)
 
 
-def update_advertiser_views(advertiser: Advertiser):
+def update_advertiser_views(advertiser: Advertiser, ip_addr):
     for ad in advertiser.ads.all():
-        ad.inc_views()
+        ad.inc_views(ip_addr)
