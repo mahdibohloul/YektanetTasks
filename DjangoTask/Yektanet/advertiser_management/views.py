@@ -1,11 +1,10 @@
 from django.contrib import messages
-from django.db.models.functions import Trunc
 from django.urls import reverse
 from django.views.generic import RedirectView, CreateView, TemplateView, DetailView
 
 from .forms import CreateAdForm, CreateAdvertiserForm
-from .models import Advertiser, Ad, View
-from .services import get_ad_by_pk, update_advertisers_views
+from .models import Advertiser, Ad
+from .services import get_ad_by_pk, update_advertisers_views, num_of_ad_views_apart_hour, num_of_ad_clicks_apart_hour
 
 
 class AdListView(TemplateView):
@@ -15,7 +14,6 @@ class AdListView(TemplateView):
         advertisers = Advertiser.objects.all()
         print(self.request.ip_addr)
         update_advertisers_views(advertisers, self.request.ip_addr)
-
         context = {
             'advertisers': advertisers
         }
@@ -51,9 +49,10 @@ class AdDetailView(DetailView):
     template_name = 'advertiser_management/ad_detail.html'
 
     def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         ad = self.get_object()
-        views = list(View.objects.annotate(hour=Trunc('created_on', 'hour')).filter(ad=ad))
-        context = {
-            'views': views
-        }
+        views = num_of_ad_views_apart_hour(ad)
+        clicks = num_of_ad_clicks_apart_hour(ad)
+        context['views'] = views
+        context['clicks'] = clicks
         return context
