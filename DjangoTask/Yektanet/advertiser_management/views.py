@@ -55,4 +55,5 @@ class AdDetailView(DetailView):
         clicks = num_of_ad_clicks_apart_hour(ad)
         context['views'] = views
         context['clicks'] = clicks
+        context['ctr'] = ad.ctr
         return context

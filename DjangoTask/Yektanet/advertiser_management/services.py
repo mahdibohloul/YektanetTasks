@@ -1,4 +1,4 @@
-from django.db.models import Q, F, Count
+from django.db.models import Q, F, Count, Avg
 from django.db.models.functions import Trunc
 
 from .models import Ad, Advertiser, View, Click
@@ -48,3 +48,4 @@ def __get_created_times(model, ad):
     created_times = model.objects.filter(ad=ad).annotate(created_time=Trunc('created_on', 'hour')).distinct(
         'created_time').values_list('created_time').order_by('created_time')
     return created_times
+

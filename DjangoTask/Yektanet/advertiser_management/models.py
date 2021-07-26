@@ -61,6 +61,10 @@ class Ad(models.Model):
     def get_absolute_url(self):
         return reverse('ad-detail', kwargs={'pk': self.pk})
 
+    @property
+    def ctr(self):
+        return round(self.total_clicks() / self.total_views(), 2)
+
 
 class Click(models.Model):
     ad = models.ForeignKey(Ad, on_delete=models.CASCADE, related_name='clicks')
