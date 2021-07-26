@@ -8,6 +8,9 @@ class Advertiser(models.Model):
     def __str__(self):
         return self.name
 
+    def get_approved_ads(self):
+        return self.ads.filter(approved=True)
+
     def get_total_clicks(self):
         ads = self.ads.all()
         clicks_count = sum(ad.total_clicks() for ad in ads)
