@@ -1,9 +1,10 @@
 from django.contrib import messages
+from django.db.models.functions import Trunc
 from django.urls import reverse
-from django.views.generic import RedirectView, CreateView, TemplateView
+from django.views.generic import RedirectView, CreateView, TemplateView, DetailView
 
 from .forms import CreateAdForm, CreateAdvertiserForm
-from .models import Advertiser
+from .models import Advertiser, Ad, View
 from .services import get_ad_by_pk, update_advertisers_views
 
 
@@ -43,3 +44,16 @@ class CreateAdvertiserView(CreateView):
     form_class = CreateAdvertiserForm
     template_name = 'advertiser_management/create_advertiser.html'
     success_url = '/'
+
+
+class AdDetailView(DetailView):
+    model = Ad
+    template_name = 'advertiser_management/ad_detail.html'
+
+    def get_context_data(self, **kwargs):
+        ad = self.get_object()
+        views = list(View.objects.annotate(hour=Trunc('created_on', 'hour')).filter(ad=ad))
+        context = {
+            'views': views
+        }
+        return context

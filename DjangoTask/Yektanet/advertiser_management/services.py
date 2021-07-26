@@ -21,5 +21,5 @@ def update_advertisers_views(advertisers: list[Advertiser], ip_addr):
 
 
 def update_advertiser_views(advertiser: Advertiser, ip_addr):
-    for ad in advertiser.ads.all():
+    for ad in advertiser.get_approved_ads():
         ad.inc_views(ip_addr)

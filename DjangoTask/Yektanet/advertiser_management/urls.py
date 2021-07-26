@@ -6,4 +6,5 @@ urlpatterns = [
     path('click/<slug:pk>', views.ClickAdView.as_view(), name='click-ad-view'),
     path('create-ad', views.CreateAdView.as_view(), name='create-ad'),
     path('create-adviser', views.CreateAdvertiserView.as_view(), name='create-adviser'),
+    path('ad/<slug:pk>', views.AdDetailView.as_view(), name='ad-detail'),
 ]

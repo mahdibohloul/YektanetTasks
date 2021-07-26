@@ -1,6 +1,7 @@
 from django.db import models
 from PIL import Image
-
+from django.urls import reverse
+from django.db.models.functions import Trunc
 
 class Advertiser(models.Model):
     name = models.CharField(max_length=50)
@@ -55,6 +56,9 @@ class Ad(models.Model):
 
     def total_views(self):
         return self.views.count()
+
+    def get_absolute_url(self):
+        return reverse('ad-detail', kwargs={'pk': self.pk})
 
 
 class Click(models.Model):

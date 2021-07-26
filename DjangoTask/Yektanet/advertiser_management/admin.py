@@ -25,7 +25,7 @@ class AdAdmin(admin.ModelAdmin):
     search_fields = ['title', 'advertiser__name']
     inlines = [ClickInline, ViewInLine]
     actions = ['mark_as_approved', 'mark_as_disapproved']
-
+    view_on_site = True
     fieldsets = (
         ('General info', {
             'fields': ['advertiser', 'title', 'approved']
