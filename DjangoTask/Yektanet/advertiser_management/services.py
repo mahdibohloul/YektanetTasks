@@ -39,7 +39,7 @@ def num_of_ad_clicks_apart_hour(ad: Ad):
 def __prepare_num_apart_hour(model, ad: Ad):
     model_name = "advertiser_management_" + model.__name__.lower()
     result = model.objects.raw(
-        f"SELECT 1 as id, COUNT(id) as \"count\", DATE_TRUNC('hour', {model_name}.\"created_on\" AT TIME ZONE 'UTC') AS \"created_date\" FROM {model_name} GROUP BY DATE_TRUNC('hour', {model_name}.\"created_on\" AT TIME ZONE 'UTC')")
+        f"SELECT 1 as id, COUNT(id) as \"count\", DATE_TRUNC('hour', {model_name}.\"created_on\" AT TIME ZONE 'UTC') AS \"created_date\" FROM {model_name} WHERE {model_name}.\"ad_id\" = {ad.id} GROUP BY DATE_TRUNC('hour', {model_name}.\"created_on\" AT TIME ZONE 'UTC') ORDER BY \"created_date\" DESC ")
 
     return result
 
