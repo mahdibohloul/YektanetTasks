@@ -24,7 +24,7 @@ class AdAdmin(admin.ModelAdmin):
     list_filter = ['approved', 'advertiser__name']
     search_fields = ['title', 'advertiser__name']
     inlines = [ClickInline, ViewInLine]
-    actions = ['mark_as_approved', ]
+    actions = ['mark_as_approved', 'mark_as_disapproved']
 
     fieldsets = (
         ('General info', {
@@ -40,6 +40,10 @@ class AdAdmin(admin.ModelAdmin):
         self.message_user(
             request, f'{updated} ads mark as approved', messages.SUCCESS
         )
+
+    def mark_as_disapproved(self, request, queryset):
+        updated = queryset.update(approved=False)
+        self.message_user(request, f'{updated} ads mark as disapproved', messages.ERROR)
 
 
 class AdTabular(admin.TabularInline):
