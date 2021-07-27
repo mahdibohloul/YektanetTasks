@@ -7,7 +7,7 @@ from .models import Advertiser, Ad
 from .services import get_ad_by_pk, update_advertisers_views, num_of_ad_views_apart_hour, num_of_ad_clicks_apart_hour
 
 
-class AdListView(TemplateView):
+class AdvertiserListView(TemplateView):
     template_name = 'advertiser_management/ads.html'
 
     def get_context_data(self, **kwargs):

@@ -62,7 +62,9 @@ class Ad(models.Model):
 
     @property
     def ctr(self):
-        return round(self.total_clicks() / self.total_views(), 2)
+        if self.total_views() != 0:
+            return round(self.total_clicks() / self.total_views(), 2)
+        return 0
 
 
 class Click(models.Model):
