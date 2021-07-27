@@ -6,7 +6,7 @@
                 <h5 class="card-title">{{ advertiser.name }}</h5>
                 <div class="card-body">
                     <div class="row">
-                        {% for ad in advertiser.ads.all %}
+                        {% for ad in advertiser.get_approved_ads %}
                             <div class="card p-0 mx-2">
                                 <a href="{% url 'click-ad-view' ad.id %}">
                                     <img src="{{ ad.image.url }}"

@@ -1,0 +1,27 @@
+{% extends 'advertiser_management/base.html' %}
+{% block content %}
+    <div class="content-section">
+        <div class="media">
+            <img class="rounded-circle account-img" src="{{ object.image.url }}">
+            <div class="media-body">
+                <h2 class="account-heading">{{ object.title }}</h2>
+                <p class="text-secondary">Advertiser: {{ object.advertiser }}</p>
+                <p class="text-secondary">CTR: {{ ctr }}</p>
+                <p class="text-secondary">Views: {{ object.total_views }} | Clicks: {{ object.total_clicks }}</p>
+                <div>
+                    <p class="text-secondary">Views report:</p>
+                    {% for view in views %}
+                        <li class="tabular">{{ view.created_date|date:"Y M D, H" }} viewed {{ view.count }} times</li>
+                    {% endfor %}
+                </div>
+                <div>
+                    &nbsp;
+                    <p class="text-secondary">Clicks report:</p>
+                    {% for click in clicks %}
+                        <li class="tabular">{{ click.created_date|date:"Y M D, H" }} clicked {{ click.count }} times</li>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

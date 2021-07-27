@@ -1,44 +1,46 @@
-from django.db import models
 from PIL import Image
+from django.db import models
+from django.urls import reverse
 
 
 class Advertiser(models.Model):
     name = models.CharField(max_length=50)
-    clicks = models.PositiveIntegerField(default=0)
-    views = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.name
 
-    def inc_clicks(self):
-        self.clicks += 1
-        self.save()
+    def get_approved_ads(self):
+        return self.ads.filter(approved=True)
 
-    def inc_views(self):
-        self.views += 1
-        self.save()
+    def get_total_clicks(self):
+        ads = self.ads.all()
+        clicks_count = sum(ad.total_clicks() for ad in ads)
+        return clicks_count
+
+    def get_total_views(self):
+        ads = self.ads.all()
+        views_count = sum(ad.total_views() for ad in ads)
+        return views_count
+
+    get_total_views.short_description = 'Total views'
+    get_total_clicks.short_description = 'Total clicks'
 
 
 class Ad(models.Model):
     title = models.CharField(max_length=50)
     image = models.ImageField(default='default.jpg', upload_to='ad_pics')
     link = models.URLField()
-    views = models.PositiveIntegerField(default=0)
-    clicks = models.PositiveIntegerField(default=0)
     advertiser = models.ForeignKey(Advertiser, on_delete=models.CASCADE, related_name='ads')
+    approved = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
 
-    def inc_clicks(self):
-        self.clicks += 1
-        self.advertiser.inc_clicks()
-        self.save()
+    def inc_clicks(self, ip_addr):
+        Click.objects.create(ad=self, ip=ip_addr)
 
-    def inc_views(self):
-        self.views += 1
-        self.advertiser.inc_views()
-        self.save()
+    def inc_views(self, ip_addr):
+        View.objects.create(ad=self, ip=ip_addr)
 
     def save(self, **kwargs):
         super().save(**kwargs)
@@ -48,3 +50,36 @@ class Ad(models.Model):
             output_size = (300, 300)
             img.thumbnail(output_size)
             img.save(self.image.path)
+
+    def total_clicks(self):
+        return self.clicks.count()
+
+    def total_views(self):
+        return self.views.count()
+
+    def get_absolute_url(self):
+        return reverse('ad-detail', kwargs={'pk': self.pk})
+
+    @property
+    def ctr(self):
+        if self.total_views() != 0:
+            return round(self.total_clicks() / self.total_views(), 2)
+        return 0
+
+
+class Click(models.Model):
+    ad = models.ForeignKey(Ad, on_delete=models.CASCADE, related_name='clicks')
+    created_on = models.DateTimeField(auto_now_add=True)
+    ip = models.GenericIPAddressField()
+
+    def __str__(self):
+        return f'{self.ad.title} clicked by {self.ip} in {self.created_on}'
+
+
+class View(models.Model):
+    ad = models.ForeignKey(Ad, on_delete=models.CASCADE, related_name='views')
+    created_on = models.DateTimeField(auto_now_add=True)
+    ip = models.GenericIPAddressField()
+
+    def __str__(self):
+        return f'{self.ad.title} viewed by {self.ip} in {self.created_on.strftime("%m/%d/%Y, %H:%M")}'
