@@ -1,6 +1,6 @@
-import itertools
-
 from django.db import models
+from django.db.models import Count, DateTimeField
+from django.db.models.functions import Trunc
 
 from .models import Ad, Advertiser, View, Click
 
@@ -38,9 +38,7 @@ def num_of_ad_clicks_apart_hour(ad: Ad):
 
 
 def __prepare_num_apart_hour(model: models, ad: Ad):
-    result = {}
-    objs = model.objects.filter(ad=ad).order_by('-created_on')
-    groups = itertools.groupby(objs, lambda x: x.created_on.replace(minute=0, second=0, microsecond=0))
-    for group, matches in groups:
-        result[group] = sum(1 for _ in matches)
+    result = model.objects.filter(ad=ad).annotate(
+        created_date=Trunc('created_on', 'hour', output_field=DateTimeField())).values('created_date').annotate(
+        count=Count('id')).order_by('-created_date')
     return result
