@@ -38,14 +38,25 @@ DEFAULT_DJANGO_APPS = [
 ]
 
 CREATED_APPS = [
-    'advertiser_management.apps.AdvertiserManagementConfig',
+    'advertiser_management',
+    'users',
 ]
 
 THIRD_PARTY_APPS = [
-
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 INSTALLED_APPS = DEFAULT_DJANGO_APPS + CREATED_APPS + THIRD_PARTY_APPS
+
+AUTH_USER_MODEL = 'users.User'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication'
+    ]
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
