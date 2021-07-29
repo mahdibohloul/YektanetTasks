@@ -46,3 +46,19 @@ def __prepare_num_apart_hour(model: models, ad: Ad):
         created_date=Trunc('created_on', 'hour', output_field=DateTimeField())).values('created_date').annotate(
         count=Count('id')).order_by('-created_date')
     return result
+
+
+# TODO complete this part
+def ctr_per_hour(ad: Ad):
+    view_count = View.objects.filter(ad=1).annotate(
+        time=Trunc('created_on', 'hour', output_field=DateTimeField())).values(
+        'time').annotate(count=Count('id'))
+
+    click_count = Click.objects.filter(ad=1).annotate(
+        time=Trunc('created_on', 'hour', output_field=DateTimeField())).values(
+        'time').annotate(count=Count('id'))
+
+
+def view_to_click_avg(ad: Ad):
+    last_click = ad.clicks.order_by('-created_on')[0]
+    last_view = ad.views.filter(ip=last_click.ip).order_by('-created_on')[0]
